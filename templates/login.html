@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>CodeIsEasy</title>
+        <!-- <link rel="icon" href="mylogo.png" sizes="25x25"/> -->
+        <style>
+            body {background-size: cover;}
+            #page-name {color: white;text-align: center;margin-top: 5%;font-size: 2em;}
+            #loginPage {background-color: whitesmoke;opacity: 0.8;width: 70%;margin-top: 5%;margin-left: 30%;width: 40%;user-select: none;}
+            form {text-align: center;}
+            #loginPage form input {padding: 2%;padding-left: 5%;padding-right: 5%;margin-top: 2%;margin-bottom: 3%;width: 20em;}
+            #login-btn {background-color: black;font-family: monospace;padding: 2%;margin-top: 2%;margin-bottom: 5%;width: 20em;color: cornsilk;}
+            .ad {color: blue;}
+            .ad:hover {color: hotpink;}
+            #p-view {margin-left: -6%;margin-bottom: -1%;cursor: pointer;}
+            #login-password {margin-left: -1%;}
+            .alert {color: red; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-weight: 550;}
+        </style>
+    </head>
+    <body background="../static/background_for_projecct_9.jpg">
+        <h4 id="page-name">CodeIsEasy</h4>
+        <div id="loginPage">
+            <form id="login-form" method="post">
+                <input type="text" placeholder="Your Username" id="login-user" name="login-username" required><br>
+                <input type="email" placeholder="Your Email" id="login-email" name="login-email" required><br>
+                <input type="password" placeholder="Your Password" id="login-password" name="login-password" required>
+                <abbr title="Hide/Unhide Password"><img src="../static/unview.png" alt="unview" width="4%" id="p-view" onclick="passwordView()"></abbr><br>
+                {% if error %}
+                    <p class="alert">{{msg}}</p>
+                {% endif %}
+                <button type="submit" id="login-btn">LOG IN</button><br>
+                <a class="ad" href="/signin">New to our page? Sign in</a><br><br>
+            </form>
+        </div>
+        <script>
+
+            function passwordView(){
+                if (document.getElementById("p-view").alt=="unview"){
+                    document.getElementById("p-view").alt="view";
+                    document.getElementById("p-view").src= "../static/view.png";
+                    document.getElementById("login-password").type= "text";
+                }
+                else {
+                    document.getElementById("p-view").alt="unview";
+                    document.getElementById("p-view").src= "../static/unview.png";
+                    document.getElementById("login-password").type= "password";
+                }
+            }
+            if (window.history.replaceState){
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+    </body>
+</html>
