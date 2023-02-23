@@ -94,7 +94,7 @@ def login():
             code= int(re.findall('\$(\d+)\$', hash)[0])
 
             if hash == hasher.get_hash(password, code):
-                return redirect('/profile')
+                return redirect(f'/profile/{username}')
             
             else:
                 error= True
@@ -106,9 +106,9 @@ def login():
         
     return render_template('login.html', error= error, msg= message)
 
-@app.route('/profile')
-def profile():
-    return 'Your Profile'
+@app.route('/profile/<username>')
+def profile(username):
+    return render_template('profile.html', username= username)
 
 if __name__== '__main__':
     with app.app_context():
