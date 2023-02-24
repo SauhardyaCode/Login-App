@@ -118,7 +118,13 @@ def login():
 @app.route('/profile/<username>')
 def profile(username):
     mydb.commit()
-    return render_template('profile.html', username= username)
+    pointer.execute("select username from data")
+    usernames= pointer.fetchall()
+    usernames= [usernames[i][0] for i in range(len(usernames))]
+    if username in usernames:
+        return render_template('profile.html', username= username)
+    else:
+        return "404 error by you"
 
 if __name__== '__main__':
     with app.app_context():
