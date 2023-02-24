@@ -33,13 +33,14 @@ class Data(db.Model):
     
 @app.route('/')
 def home():
+    mydb.commit()
     pointer.execute("select * from data")
     database_records= pointer.fetchall()
-
     return render_template('home.html', database_records= database_records)
 
 @app.route('/signin', methods= ['GET', 'POST'])
 def signin():
+    mydb.commit()
     error= False
     message= None
     if request.method == 'POST':
@@ -83,6 +84,7 @@ def signin():
 
 @app.route('/login', methods= ['GET', 'POST'])
 def login():
+    mydb.commit()
     error=False
     message= None
     if request.method == 'POST':
@@ -115,6 +117,7 @@ def login():
 
 @app.route('/profile/<username>')
 def profile(username):
+    mydb.commit()
     return render_template('profile.html', username= username)
 
 if __name__== '__main__':
