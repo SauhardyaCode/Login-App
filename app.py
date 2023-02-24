@@ -30,6 +30,13 @@ class Data(db.Model):
 
     def __repr__(self):
         return f"User {self.username}, Email {self.email}"
+    
+@app.route('/')
+def home():
+    pointer.execute("select * from data")
+    database_records= pointer.fetchall()
+
+    return render_template('home.html', database_records= database_records)
 
 @app.route('/signin', methods= ['GET', 'POST'])
 def signin():

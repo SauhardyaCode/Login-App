@@ -1,0 +1,12 @@
+<html lang="en">
+<head>
+    <title>CodeIsEasy - Home</title>
+</head>
+<body>
+    <h3>"Home - Page |---| Visit /signin or /login as required."</h3><br>
+    <h4>Current Users</h4><br>
+    {% for data in  database_records %}
+        {{data}}<br><br>
+    {% endfor %}
+</body>
+</html>
