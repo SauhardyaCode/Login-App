@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, make_response
 from flask_sqlalchemy import SQLAlchemy
 import mysql.connector as sql
 import password_hasher as ph
@@ -10,15 +10,16 @@ hasher= ph.PasswordHasher()
 
 app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql12599439:Dcq64aG3qL@sql12.freemysqlhosting.net/sql12599439"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
-mydb= sql.connect(
-    host= 'sql12.freemysqlhosting.net',
-    user= 'sql12599439',
-    password= 'Dcq64aG3qL',
-    database= 'sql12599439'
-)
+
+# mydb= sql.connect(
+#     host= 'sql12.freemysqlhosting.net',
+#     user= 'sql12599439',
+#     password= 'Dcq64aG3qL',
+#     database= 'sql12599439'
+# )
 
 db= SQLAlchemy(app)
-pointer= mydb.cursor(buffered=True)
+# pointer= mydb.cursor(buffered=True)
 
 
 class Data(db.Model):
@@ -27,32 +28,42 @@ class Data(db.Model):
     email= db.Column(db.String(50), nullable= False)
     pswd_hash= db.Column(db.String(100), nullable= False)
     date_created= db.Column(db.DateTime, default= datetime.utcnow())
+    logged_info= db.Column(db.String(50))
 
     def __repr__(self):
-        return f"User {self.username}, Email {self.email}"
+        return f"User: {self.username}, Email: {self.email}, Password: {self.pswd_hash}, Date: {self.date_created}, Logged: {self.logged_info}"
     
 @app.route('/')
 def home():
-    mydb.commit()
-    pointer.execute("select * from data")
-    database_records= pointer.fetchall()
+    # mydb.commit()
+    # pointer.execute("select * from data")
+    # database_records= pointer.fetchall()
+
+    db.session.commit()
+    database_records= Data.query.all()
     return render_template('home.html', database_records= database_records)
 
 @app.route('/signin', methods= ['GET', 'POST'])
 def signin():
-    mydb.commit()
+    # mydb.commit()
+    db.session.commit()
     error= False
     message= None
+    
     if request.method == 'POST':
         username= request.form['signin-username'].strip()
         email= request.form['signin-email'].strip()
         password= request.form['signin-password'].strip()
         check_password= request.form['check-password'].strip()
 
-        pointer.execute('select username, email from data')
-        uniques= pointer.fetchall()
-        unique_usernames= [uniques[i][0] for i in range(len(uniques))]
-        unique_emails= [uniques[i][1] for i in range(len(uniques))]
+        # pointer.execute('select username, email from data')
+        # uniques= pointer.fetchall()
+        # unique_usernames= [uniques[i][0] for i in range(len(uniques))]
+        # unique_emails= [uniques[i][1] for i in range(len(uniques))]
+
+        uniques= Data.query.all()
+        unique_usernames= [uniques[i].username for i in range(len(uniques))]
+        unique_emails= [uniques[i].email for i in range(len(uniques))]
         
         if len(username)<5:
             error=True
@@ -84,7 +95,8 @@ def signin():
 
 @app.route('/login', methods= ['GET', 'POST'])
 def login():
-    mydb.commit()
+    # mydb.commit()
+    db.session.commit()
     error=False
     message= None
     if request.method == 'POST':
@@ -92,18 +104,24 @@ def login():
         email= request.form['login-email'].strip()
         password= request.form['login-password'].strip()
 
-        pointer.execute('select username,email from data')
-        unique_users= pointer.fetchall()
-        pointer.execute('select pswd_hash from data')
-        pswd_hashes= pointer.fetchall()
+        # pointer.execute('select username,email from data')
+        # unique_users= pointer.fetchall()
+        # pointer.execute('select pswd_hash from data')
+        # pswd_hashes= pointer.fetchall()
+
+        uniques= Data.query.all()
+        unique_users= [(uniques[i].username, uniques[i].email) for i in range(len(uniques))]
+        pswd_hashes= [uniques[i].pswd_hash for i in range(len(uniques))]
+        print(unique_users, pswd_hashes)
 
         if (username, email) in unique_users:
             index= unique_users.index((username,email))
-            hash= pswd_hashes[index][0]
+            hash= pswd_hashes[index]
             code= int(re.findall('\$(\d+)\$', hash)[0])
 
             if hash == hasher.get_hash(password, code):
-                return redirect(f'/profile/{username}')
+                # return redirect(f'/profile/{username}')
+                return redirect(f'/set_cookie/{username}')
             
             else:
                 error= True
@@ -115,12 +133,24 @@ def login():
         
     return render_template('login.html', error= error, msg= message)
 
+@app.route('/set_cookie/<user>')
+def set_cookie(user):
+    resp= make_response(redirect(f'/profile/{user}'))
+    resp.set_cookie('name', user)
+    return resp
+
 @app.route('/profile/<username>')
 def profile(username):
-    mydb.commit()
-    pointer.execute("select username from data")
-    usernames= pointer.fetchall()
-    usernames= [usernames[i][0] for i in range(len(usernames))]
+    # mydb.commit()
+    db.session.commit()
+
+    # pointer.execute("select username from data")
+    # usernames= pointer.fetchall()
+    # usernames= [usernames[i][0] for i in range(len(usernames))]
+
+    uniques= Data.query.all()
+    usernames= [uniques[i].username for i in range(len(uniques))]
+
     if username in usernames:
         return render_template('profile.html', username= username)
     else:
