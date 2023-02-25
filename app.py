@@ -18,7 +18,7 @@ mydb= sql.connect(
 )
 
 db= SQLAlchemy(app)
-pointer= mydb.cursor()
+pointer= mydb.cursor(buffered=True)
 
 
 class Data(db.Model):
