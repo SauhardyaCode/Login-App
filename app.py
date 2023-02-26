@@ -11,16 +11,7 @@ hasher= ph.PasswordHasher()
 app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql12599439:Dcq64aG3qL@sql12.freemysqlhosting.net/sql12599439"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
-# mydb= sql.connect(
-#     host= 'sql12.freemysqlhosting.net',
-#     user= 'sql12599439',
-#     password= 'Dcq64aG3qL',
-#     database= 'sql12599439'
-# )
-
 db= SQLAlchemy(app)
-# pointer= mydb.cursor(buffered=True)
-
 
 class Data(db.Model):
     id= db.Column(db.Integer, primary_key= True)
@@ -28,16 +19,12 @@ class Data(db.Model):
     email= db.Column(db.String(50), nullable= False)
     pswd_hash= db.Column(db.String(100), nullable= False)
     date_created= db.Column(db.DateTime, default= datetime.utcnow())
-    logged_info= db.Column(db.String(50))
 
     def __repr__(self):
-        return f"User: {self.username}, Email: {self.email}, Password: {self.pswd_hash}, Date: {self.date_created}, Logged: {self.logged_info}"
+        return f"User: {self.username}, Email: {self.email}, Password: {self.pswd_hash}, Date: {self.date_created}"
     
 @app.route('/')
 def home():
-    # mydb.commit()
-    # pointer.execute("select * from data")
-    # database_records= pointer.fetchall()
 
     db.session.commit()
     database_records= Data.query.all()
@@ -55,11 +42,6 @@ def signin():
         email= request.form['signin-email'].strip()
         password= request.form['signin-password'].strip()
         check_password= request.form['check-password'].strip()
-
-        # pointer.execute('select username, email from data')
-        # uniques= pointer.fetchall()
-        # unique_usernames= [uniques[i][0] for i in range(len(uniques))]
-        # unique_emails= [uniques[i][1] for i in range(len(uniques))]
 
         uniques= Data.query.all()
         unique_usernames= [uniques[i].username for i in range(len(uniques))]
@@ -95,7 +77,6 @@ def signin():
 
 @app.route('/login', methods= ['GET', 'POST'])
 def login():
-    # mydb.commit()
     db.session.commit()
     error=False
     message= None
@@ -103,11 +84,6 @@ def login():
         username= request.form['login-username'].strip()
         email= request.form['login-email'].strip()
         password= request.form['login-password'].strip()
-
-        # pointer.execute('select username,email from data')
-        # unique_users= pointer.fetchall()
-        # pointer.execute('select pswd_hash from data')
-        # pswd_hashes= pointer.fetchall()
 
         uniques= Data.query.all()
         unique_users= [(uniques[i].username, uniques[i].email) for i in range(len(uniques))]
@@ -120,7 +96,6 @@ def login():
             code= int(re.findall('\$(\d+)\$', hash)[0])
 
             if hash == hasher.get_hash(password, code):
-                # return redirect(f'/profile/{username}')
                 return redirect(f'/set_cookie/{username}')
             
             else:
@@ -141,12 +116,7 @@ def set_cookie(user):
 
 @app.route('/profile/<username>')
 def profile(username):
-    # mydb.commit()
     db.session.commit()
-
-    # pointer.execute("select username from data")
-    # usernames= pointer.fetchall()
-    # usernames= [usernames[i][0] for i in range(len(usernames))]
 
     uniques= Data.query.all()
     usernames= [uniques[i].username for i in range(len(uniques))]
