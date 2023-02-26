@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, make_response
 from flask_sqlalchemy import SQLAlchemy
-import mysql.connector as sql
 import password_hasher as ph
 import re
 from datetime import datetime
@@ -8,8 +7,9 @@ from datetime import datetime
 app= Flask(__name__)
 hasher= ph.PasswordHasher()
 
-app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql12599439:Dcq64aG3qL@sql12.freemysqlhosting.net/sql12599439"
+app.config['SQLALCHEMY_DATABASE_URI']= "sqlite:///data.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
+
 
 db= SQLAlchemy(app)
 
@@ -22,7 +22,7 @@ class Data(db.Model):
 
     def __repr__(self):
         return f"User: {self.username}, Email: {self.email}, Password: {self.pswd_hash}, Date: {self.date_created}"
-    
+
 @app.route('/')
 def home():
 
