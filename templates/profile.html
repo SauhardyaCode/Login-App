@@ -1,8 +1,19 @@
 <html lang="en">
 <head>
     <title>Profile - {{username}}</title>
+    <style>
+        a:hover {cursor: pointer;}
+    </style>
 </head>
 <body>
-    Name = {{username}}
+    Name = {{username}}<br><br>
+    <a onclick="logout()">Log Out</a>
+    <script>
+        function logout(){
+            if (confirm("Do you really want to log out, {{username}}?")) {
+                window.location.replace('/logout')
+            }
+        }
+    </script>
 </body>
 </html>
