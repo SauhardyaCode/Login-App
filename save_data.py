@@ -13,6 +13,7 @@ class Data(db.Model):
     email= db.Column(db.String(50), nullable= False)
     pswd_hash= db.Column(db.String(100), nullable= False)
     date_created= db.Column(db.DateTime, default= datetime.datetime.utcnow())
+    user_hash= db.Column(db.String(100), nullable= False)
 
 
 @app.route('/')
@@ -26,9 +27,9 @@ def main():
         with open(os.path.dirname(__file__)+"/data.py", 'a') as f:
             for i in range(len(data)):
                 if i+1==len(data):
-                    f.write(f"({data[i].id}, '{data[i].username}', '{data[i].email}', '{data[i].pswd_hash}', '{data[i].date_created}')]")
+                    f.write(f"{{'id': {data[i].id}, 'username': '{data[i].username}', 'email': '{data[i].email}', 'pswd_hash': '{data[i].pswd_hash}', 'date_created': '{data[i].date_created}', 'user_hash': '{data[i].user_hash}'}}\\\n]")
                 else:
-                    f.write(f"({data[i].id}, '{data[i].username}', '{data[i].email}', '{data[i].pswd_hash}', '{data[i].date_created}'), \\\n")
+                    f.write(f"{{'id': {data[i].id}, 'username': '{data[i].username}', 'email': '{data[i].email}', 'pswd_hash': '{data[i].pswd_hash}', 'date_created': '{data[i].date_created}', 'user_hash': '{data[i].user_hash}'}}, \\\n")
         
         return "Done..."
     

@@ -1,8 +1,9 @@
 database= [\
-(1, 'Sauhardya', 'haldarsauhardya@gmail.com', '$10$Sv9BBGZZQ1m9Z065RmWROR3KMMIO6l6mRD3RYR1Z9aOZ55RYTYYj6m258p0P2JA2', '2023-02-26 12:52:27'), \
-(3, 'greekman', 'greekman@gmail.com', '$5$p21FQZnSbN0QWYW2nERU688jF4VIl55RYzFKOZ1Tl8WHD7OpX1HLP6DT0T1ZEE4M', '2023-02-26 12:55:37'), \
-(4, 'Aruna', 'aruna@gmail.com', '$5$N0Kn4TSmGmEQWnG6lOFa5W5KmOLT880NFC6mGOR1cbVCGqPD6l1aGtA8mSjVBDSS', '2023-02-26 14:37:43'), \
-(5, 'test user 1', 'user1@gmail.com', '$7$376a1RLWQZ0K1303XaELQOJLmXRERLnFD7F2D7F1kl07OZ4me1X9Z8XQOR9F07O3', '2023-02-26 14:37:43'), \
-(6, 'Harutora Tsuchimikado', 'haruss@gmail.com', '$6$pL1EpGWQFY0r5oFG9B64G2OI5jRNYNll55S78A9J3OQRYGZFFLQ6l6Em78m8l01h', '2023-02-26 14:37:43'), \
-(7, 'Ramraj', 'ram@gmail.com', '$9$2IwTZI7NB6IVK2UKKHH1ZLXRErZHYGYbP127MMNRM5RYTBBmh4YHJBpRTCLmqQN0', '2023-02-26 18:25:13'), \
-(8, 'Allu Arjun', 'tollywood1@gmail.com', '$7$NypabmLDCLXiG5ZGMORF6DRHYQRZD7F1cbQK8p8EHCODRFLVmOR3T0P1onj6nGPE', '2023-02-26 19:24:48')]
+{'id': 1, 'username': 'Sauhardya', 'email': 'haldarsauhardya@gmail.com', 'pswd_hash': '$10$Sv9BBGZZQ1m9Z065RmWROR3KMMIO6l6mRD3RYR1Z9aOZ55RYTYYj6m258p0P2JA2', 'date_created': '2023-02-26 12:52:27', 'user_hash': '$8$SlY1V2b1JS39pPNmKORYzFLT0Q15UHFMY3jXXRKHMYRYWc3uGp0WK4FKMLCGS61b'}, \
+{'id': 3, 'username': 'greekman', 'email': 'greekman@gmail.com', 'pswd_hash': '$5$p21FQZnSbN0QWYW2nERU688jF4VIl55RYzFKOZ1Tl8WHD7OpX1HLP6DT0T1ZEE4M', 'date_created': '2023-02-26 12:55:37', 'user_hash': '$2$pAW6LQ1Q4UbKRGJWcNZ2K4tRWE8U6FFVOl55S2578Bl1jXXREcbQbYLm0WOZ40Qm'}, \
+{'id': 4, 'username': 'Aruna', 'email': 'aruna@gmail.com', 'pswd_hash': '$5$N0Kn4TSmGmEQWnG6lOFa5W5KmOLT880NFC6mGOR1cbVCGqPD6l1aGtA8mSjVBDSS', 'date_created': '2023-02-26 14:37:43', 'user_hash': '$8$5EYVN2W8n75N3RF6CK3qN6me1JGA8m8l2I9MNToVQoN77PFI61LVBBmWbWLmnEHF'}, \
+{'id': 5, 'username': 'test user 1', 'email': 'user1@gmail.com', 'pswd_hash': '$7$376a1RLWQZ0K1303XaELQOJLmXRERLnFD7F2D7F1kl07OZ4me1X9Z8XQOR9F07O3', 'date_created': '2023-02-26 14:37:43', 'user_hash': '$7$2rQTbmYFEOD1YTE2jZTXYS4JA3YyEnLRD7F2D1m6l6COZ41aF1Gmnl8QJMK8A79N'}, \
+{'id': 6, 'username': 'Harutora Tsuchimikado', 'email': 'haruss@gmail.com', 'pswd_hash': '$6$pL1EpGWQFY0r5oFG9B64G2OI5jRNYNll55S78A9J3OQRYGZFFLQ6l6Em78m8l01h', 'date_created': '2023-02-26 14:37:43', 'user_hash': '$7$KWLOG0lDOH6RETMcSvCm6M68P72FZ3f8BlYRSP5O4TT0Vl40WHLXY5OtnFMYF6mN'}, \
+{'id': 7, 'username': 'Ramraj', 'email': 'ram@gmail.com', 'pswd_hash': '$9$2IwTZI7NB6IVK2UKKHH1ZLXRErZHYGYbP127MMNRM5RYTBBmh4YHJBpRTCLmqQN0', 'date_created': '2023-02-26 18:25:13', 'user_hash': '$6$RIQ78QPN0LLw9baF79K61ZKMIOvWJ1FMZD07GOTZKGQWbRESN6muGK5N41ZLP7GN'}, \
+{'id': 8, 'username': 'Allu Arjun', 'email': 'tollywood1@gmail.com', 'pswd_hash': '$7$NypabmLDCLXiG5ZGMORF6DRHYQRZD7F1cbQK8p8EHCODRFLVmOR3T0P1onj6nGPE', 'date_created': '2023-02-26 19:24:48', 'user_hash': '$6$5INJXQjVCEVEU3NCNW4N65N3RS8DP7GPKGZD7F1otnGPLXSS6JGLDYj6mpS61ZLW'}\
+]
