@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, make_response, Resp
 from flask_sqlalchemy import SQLAlchemy
 import password_hasher as ph
 import re, os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app= Flask(__name__)
 hasher= ph.PasswordHasher()
@@ -34,16 +34,16 @@ def home():
     database_records= Data.query.all()
     return render_template('home.html', database_records= database_records)
 
-@app.route('/signin', methods= ['GET', 'POST'])
-def signin():
+@app.route('/signup', methods= ['GET', 'POST'])
+def signup():
     db.session.commit()
     error= False
     message= None
     
     if request.method == 'POST':
-        username= request.form['signin-username'].strip()
-        email= request.form['signin-email'].strip()
-        password= request.form['signin-password'].strip()
+        username= request.form['signup-username'].strip()
+        email= request.form['signup-email'].strip()
+        password= request.form['signup-password'].strip()
         check_password= request.form['check-password'].strip()
 
         uniques= Data.query.all()
@@ -74,21 +74,15 @@ def signin():
             data= Data(username= username, email= email, pswd_hash= hasher.get_hash(password), user_hash= hasher.get_hash(username))
             db.session.add(data)
             db.session.commit()
-            uniques= Data.query.all()
-            id= uniques[-1].id; username= uniques[-1].username; email= uniques[-1].email; pswd_hash= uniques[-1].pswd_hash; date_created= uniques[-1].date_created
-            with open(os.path.dirname(__file__)+'/all_data.py') as f:
-                get_data= f.read()
-            with open(os.path.dirname(__file__)+'/all_data.py', 'w') as f:
-                f.write(f"{get_data[:-1]}, {(id, username, email, pswd_hash, date_created)}]")
+            redirect('/signup')
 
-
-    return render_template('sign_in.html', error= error, msg= message)
+    if request.cookies.get('logged_info')=='1':
+        return redirect('/profile')
+    return render_template('sign_up.html', error= error, msg= message)
 
 @app.route('/login', methods= ['GET', 'POST'])
 def login():
     db.session.commit()
-    if request.cookies.get('logged_info')=='1':
-        return redirect('/profile')
     error=False
     message= None
     if request.method == 'POST':
@@ -117,30 +111,37 @@ def login():
         else:
             error= True
             message= "\u26a0 This username and email is not signed up"
-        
+    
+    if request.cookies.get('logged_info')=='1':
+        return redirect('/profile')
     return render_template('login.html', error= error, msg= message)
 
 @app.route('/set_cookie/<int:index>&<user_hash>')
 def set_cookie(index, user_hash):
-    resp= make_response(redirect(f'/profile'))
-    resp.set_cookie('logged_user', user_hash)
-    resp.set_cookie('logged_id', str(index))
-    resp.set_cookie('logged_info', '1')
+    resp= make_response(redirect(f'/login'))
+    resp.set_cookie('logged_user', user_hash, expires= datetime.utcnow()+timedelta(weeks= 200))
+    resp.set_cookie('logged_id', str(index), expires= datetime.utcnow()+timedelta(weeks= 200))
+    resp.set_cookie('logged_info', '1', expires= datetime.utcnow()+timedelta(weeks= 200))
     return resp
 
 @app.route('/profile')
 def profile():
     db.session.commit()
+    logged= request.cookies.get('logged_info')
     userhash= request.cookies.get('logged_user')
+
+    if logged!='1':
+        return redirect('/')
 
     uniques= Data.query.all()
     userhashes= [uniques[i].user_hash for i in range(len(uniques))]
-    index= userhashes.index(userhash)
 
-    if userhash in userhashes:
-        return render_template('profile.html', username= uniques[index].username)
+    try:
+        index= userhashes.index(userhash)
+    except:
+        return render_template('cookie_mismatch.html')
     else:
-        return "404 error by you", 404
+        return render_template('profile.html', username= uniques[index].username)
 
 @app.route('/logout')
 def logout():
@@ -152,8 +153,16 @@ def logout():
 
     return resp
 
+@app.errorhandler(404)
+def _404_(e):
+    return render_template('404.html')
+
+@app.errorhandler(500)
+def _500_(e):
+    url= request.url
+    return render_template('500.html', url=url)
 
 if __name__== '__main__':
     with app.app_context():
         db.create_all()
-    app.run(port=2000)
+    app.run(port=2000, debug=True)

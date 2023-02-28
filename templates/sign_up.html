@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <title>CodeIsEasy - Login</title>
+        <title>CodeIsEasy - signup</title>
         <link rel="icon" href="static/logo.png">
         <style>
             body {background-size: cover;}
@@ -12,40 +12,43 @@
             #login-btn {background-color: black;font-family: monospace;padding: 2%;margin-top: 2%;margin-bottom: 5%;width: 20em;color: cornsilk;}
             .ad {color: blue;}
             .ad:hover {color: hotpink;}
-            #p-view {margin-left: -6%;margin-bottom: -1%;cursor: pointer;}
-            #login-password {margin-left: -1%;}
+            .p-view {margin-left: -6%;margin-bottom: -1%;cursor: pointer;}
             .alert {color: red; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-weight: 550;}
         </style>
     </head>
     <body background="../static/background_for_project_9.jpg">
         <h4 id="page-name">CodeIsEasy</h4>
         <div id="loginPage">
-            <form id="login-form" method="post">
-                <input type="text" placeholder="Your Username" id="login-user" name="login-username" required><br>
-                <input type="email" placeholder="Your Email" id="login-email" name="login-email" required><br>
-                <input type="password" placeholder="Your Password" id="login-password" name="login-password" required>
-                <abbr title="Hide/Unhide Password"><img src="static/unview.png" alt="unview" width="4%" id="p-view" onclick="passwordView()"></abbr><br>
+            <form id="signup-form" method="post">
+                <input type="text" placeholder="Create Username" id="login-user" name="signup-username" required><br>
+                <input type="email" placeholder="Your email" id="signup-email" name="signup-email" required><br>
+                <input type="password" placeholder="Set Your password" id="password1" name="signup-password" required><br>
+                <input type="password" placeholder="Repeat Password" id="password2" name="check-password" required>
+                <abbr title="Hide/Unhide Password"><img src="../static/unview.png" alt="unview" width="4%" class="p-view" id="view" onclick="passwordView()"></abbr><br>
                 {% if error %}
                     <p class="alert">{{msg}}</p>
                 {% endif %}
-                <button type="submit" id="login-btn">LOG IN</button><br>
-                <a class="ad" href="/signup">New to our page? Sign up</a><br><br>
+                <button type="submit" id="login-btn">SIGN UP</button><br>
+                <a class="ad" href="/login">Already a member? Login</a><br><br>
             </form>
         </div>
         <script>
-
+            
             function passwordView(){
-                if (document.getElementById("p-view").alt=="unview"){
-                    document.getElementById("p-view").alt="view";
-                    document.getElementById("p-view").src= "../static/view.png";
-                    document.getElementById("login-password").type= "text";
+                let viewer= document.getElementById("view");
+                if (viewer.alt=="unview"){
+                    viewer.alt="view";
+                    viewer.src= "../static/view.png";
+                    document.getElementById("password2").type= "text";
                 }
                 else {
-                    document.getElementById("p-view").alt="unview";
-                    document.getElementById("p-view").src= "../static/unview.png";
-                    document.getElementById("login-password").type= "password";
+                    viewer.alt="unview";
+                    viewer.src= "../static/unview.png";
+                    document.getElementById("password2").type= "password";
                 }
             }
+
+
             if (window.history.replaceState){
                 window.history.replaceState( null, null, window.location.href );
             }

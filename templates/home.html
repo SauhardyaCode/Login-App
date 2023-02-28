@@ -1,13 +1,15 @@
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="D8321KqWLat1j1XZWLMIx7kUzqNnWPeHVwkJkUd_Mto" />
+    <link rel="icon" href="static/logo.png">
     <title>CodeIsEasy - Home</title>
 </head>
 <body>
-    <h3>"Home - Page |---| Visit <a href="/signin">/signin</a> or <a href="/login">/login</a> as required."</h3><br>
+    <h3>"Home - Page |---| Visit <a href="/signup">/signup</a> or <a href="/login">/login</a> as required."</h3><br>
     <h4>Current Users</h4><br>
     {% for data in  database_records %}
         {{data}}<br><br>
     {% endfor %}
+    <script src="static/history_saver.js"></script>
 </body>
 </html>
