@@ -166,6 +166,11 @@ def one_add(user):
     db.session.add(data)
     db.session.commit()
 
+@app.route('/show')
+def show():
+    data = One.query.all()
+    return data
+
 @app.errorhandler(404)
 def _404_(e):
     return render_template('404.html')
