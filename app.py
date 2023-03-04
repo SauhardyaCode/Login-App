@@ -8,6 +8,7 @@ app= Flask(__name__)
 hasher= ph.PasswordHasher()
 
 app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql8601155:DG89evD7Pj@sql8.freemysqlhosting.net/sql8601155"
+app.config['SQLALCHEMY_BINDS'] = {'one': f'sqlite:///{os.path.dirname(__file__)}/one.db'}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 
@@ -26,6 +27,12 @@ class Data(db.Model):
 
     def __repr__(self):
         return f"User: {self.username}, Email: {self.email}, Date: {self.date_created}"
+
+class One(db.Model):
+    __bind_key__ = 'one'
+    id= db.Column(db.Integer, primary_key= True)
+    username= db.Column(db.String(50), nullable= False)
+    date_created= db.Column(db.DateTime, default= datetime.utcnow())
 
 @app.route('/')
 def home():
@@ -152,6 +159,12 @@ def logout():
     resp.set_cookie('logged_info', '0')
 
     return resp
+
+@app.route('/one/<user>')
+def one_add(user):
+    data = One(username= user)
+    db.session.add(data)
+    db.session.commit()
 
 @app.errorhandler(404)
 def _404_(e):
