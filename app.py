@@ -8,7 +8,7 @@ app= Flask(__name__)
 hasher= ph.PasswordHasher()
 
 app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql8601155:DG89evD7Pj@sql8.freemysqlhosting.net/sql8601155"
-app.config['SQLALCHEMY_BINDS'] = {'one': f'sqlite:///{os.path.dirname(__file__)}/one.db'}
+app.config['SQLALCHEMY_BINDS'] = {'one': f'sqlite:///one.db'}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 
