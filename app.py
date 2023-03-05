@@ -170,6 +170,7 @@ def one_add(user):
     db.session.commit()
     os.system('git add .')
     os.system('git commit -m \"Sqlite updated\"')
+    os.system('git push -u origin master')
     return redirect('/show')
 
 @app.route('/show')
