@@ -34,6 +34,9 @@ class One(db.Model):
     username= db.Column(db.String(50), nullable= False)
     date_created= db.Column(db.DateTime, default= datetime.utcnow())
 
+    def __repr__(self):
+        return f"id: {self.id}, user: {self.username}, date: {self.date_created}"
+
 @app.route('/')
 def home():
 
@@ -165,11 +168,12 @@ def one_add(user):
     data = One(username= user)
     db.session.add(data)
     db.session.commit()
+    return redirect('/show')
 
 @app.route('/show')
 def show():
     data = One.query.all()
-    return data
+    return render_template('sqlite.html', database= data)
 
 @app.errorhandler(404)
 def _404_(e):
