@@ -168,6 +168,7 @@ def one_add(user):
     data = One(username= user)
     db.session.add(data)
     db.session.commit()
+    os.system('git add .')
     return redirect('/show')
 
 @app.route('/show')
