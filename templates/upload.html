@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Uploader</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        <h3>What's on your mind?</h3><br>
+        <input type="text" name="about"><br><br>
+        <h3>Upload a pic</h3><br>
+        <input type="file" name="image" accept="image/png, image/jpg, image/gif"><br><br>
+        <input type="submit" value="Post">
+    </form>
+    <script>
+        if (window.history.replaceState){
+                window.history.replaceState( null, null, window.location.href );
+            }
+    </script>
+</body>
+</html>

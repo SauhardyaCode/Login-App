@@ -1,14 +1,13 @@
 from flask import Flask, render_template, request, redirect, make_response, Response
 from flask_sqlalchemy import SQLAlchemy
 import password_hasher as ph
-import re, os
+import re, os, base64
 from datetime import datetime, timedelta
 
 app= Flask(__name__)
 hasher= ph.PasswordHasher()
 
 app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql8601155:DG89evD7Pj@sql8.freemysqlhosting.net/sql8601155"
-app.config['SQLALCHEMY_BINDS'] = {'one': f'sqlite:///one.db'}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 
@@ -27,15 +26,14 @@ class Data(db.Model):
 
     def __repr__(self):
         return f"User: {self.username}, Email: {self.email}, Date: {self.date_created}"
+    
 
-class One(db.Model):
-    __bind_key__ = 'one'
-    id= db.Column(db.Integer, primary_key= True)
-    username= db.Column(db.String(50), nullable= False)
-    date_created= db.Column(db.DateTime, default= datetime.utcnow())
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key= True)
+    about = db.Column(db.String(500))
+    image = db.Column(db.LargeBinary(length=(2**32)-1))
+    extension = db.Column(db.String(5))
 
-    def __repr__(self):
-        return f"id: {self.id}, user: {self.username}, date: {self.date_created}"
 
 @app.route('/')
 def home():
@@ -163,20 +161,47 @@ def logout():
 
     return resp
 
-@app.route('/one/<user>')
-def one_add(user):
-    data = One(username= user)
-    db.session.add(data)
-    db.session.commit()
-    os.system('git add .')
-    os.system('git commit -m \"Sqlite updated\"')
-    os.system('git push -u origin master')
-    return redirect('/show')
+@app.route('/upload', methods= ['GET', 'POST'])
+def upload():
+    if request.method=='POST':
+        about = request.form['about']
+        image = request.files['image']
+        image.save(os.path.dirname(__file__)+f"/static/{image.filename}")
+        with open(f"static/{image.filename}", 'rb') as binary:
+            blob = binary.read()
+        os.remove(f"static/{image.filename}")
 
-@app.route('/show')
-def show():
-    data = One.query.all()
-    return render_template('sqlite.html', database= data)
+        ext = re.findall("\.([a-z]*)$", image.filename)[0]
+        data = Posts(about= about, image= blob, extension= ext)
+        db.session.add(data)
+        db.session.commit()
+
+        database = Posts.query.all()
+        # image.save(os.path.dirname(__file__)+f"/static/post{database[-1].id}.{database[-1].extension}")
+        with open(os.path.dirname(__file__)+f"/static/Posts/post{database[-1].id}.{database[-1].extension}", 'wb') as f:
+            f.write(blob)
+    
+    return render_template('upload.html')
+
+@app.route('/posts')
+def posts():
+    database = Posts.query.all()
+    abouts = []
+    urls = []
+    for i in range(len(database)):
+        abouts.append(database[i].about)
+        
+        if os.path.isfile(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}"):
+            urls.append(f"/static/Posts/post{database[i].id}.{database[i].extension}")
+        else:
+            urls.append(base64.b64encode(database[i].image))
+            urls[i] = urls[i].decode('utf-8')
+            urls[i] = f"data:image/{database[i].extension};base64,{urls[i]}"
+            with open(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}", 'wb') as f:
+                f.write(database[i].image)
+        
+
+    return render_template('posts.html', database= (abouts, urls))
 
 @app.errorhandler(404)
 def _404_(e):
