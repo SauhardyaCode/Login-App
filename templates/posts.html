@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         img {
-            max-width: 400px;
+            width: 400px;
         }
     </style>
     <title>Your Posts</title>
@@ -17,7 +17,7 @@
     {%set count = database[0]|length %}
     {% for i in range(count) %}
     <h3>{{i+1}}</h3>{{database[0][i]}}<br>
-        <img src="{{database[1][i]}}" alt="your image" onerror="this.onerror = null; this.src = '/static/Posts/null_image.jpg'"/><br>
+        <img src="{{database[1][i]}}" alt="your image" loading="lazy"/><br>
     {% endfor %}
 </body>
 
