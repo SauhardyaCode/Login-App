@@ -31,7 +31,6 @@ class Data(db.Model):
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key= True)
     about = db.Column(db.String(500))
-    image = db.Column(db.LargeBinary(length=(2**32)-1))
     extension = db.Column(db.String(5))
 
 
@@ -166,21 +165,15 @@ def upload():
     if request.method=='POST':
         about = request.form['about']
         image = request.files['image']
-        image.save(os.path.dirname(__file__)+f"/static/{image.filename}")
-        with open(f"static/{image.filename}", 'rb') as binary:
-            blob = binary.read()
-        os.remove(f"static/{image.filename}")
 
         ext = re.findall("\.([a-z]*)$", image.filename)[0]
-        data = Posts(about= about, image= blob, extension= ext)
+        data = Posts(about= about, extension= ext)
         db.session.add(data)
         db.session.commit()
 
         database = Posts.query.all()
-        # image.save(os.path.dirname(__file__)+f"/static/post{database[-1].id}.{database[-1].extension}")
-        with open(os.path.dirname(__file__)+f"/static/Posts/post{database[-1].id}.{database[-1].extension}", 'wb') as f:
-            f.write(blob)
-    
+        image.save(os.path.dirname(__file__)+f"/static/post{database[-1].id}.{database[-1].extension}")
+
     return render_template('upload.html')
 
 @app.route('/posts')
@@ -194,12 +187,7 @@ def posts():
         if os.path.isfile(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}"):
             urls.append(f"/static/Posts/post{database[i].id}.{database[i].extension}")
         else:
-            urls.append(base64.b64encode(database[i].image))
-            urls[i] = urls[i].decode('utf-8')
-            urls[i] = f"data:image/{database[i].extension};base64,{urls[i]}"
-            with open(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}", 'wb') as f:
-                f.write(database[i].image)
-        
+            urls.append("")
 
     return render_template('posts.html', database= (abouts, urls))
 
