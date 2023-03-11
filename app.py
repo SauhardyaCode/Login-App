@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 app= Flask(__name__)
 hasher= ph.PasswordHasher()
 
-app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql8601155:DG89evD7Pj@sql8.freemysqlhosting.net/sql8601155"
+app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql7604785:Y7GAsDCUTM@sql7.freesqldatabase.com/sql7604785"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 
