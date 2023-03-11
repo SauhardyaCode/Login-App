@@ -162,6 +162,7 @@ def logout():
 
 @app.route('/upload', methods= ['GET', 'POST'])
 def upload():
+    db.session.commit()
     if request.method=='POST':
         about = request.form['about']
         image = request.files['image']
@@ -181,13 +182,11 @@ def posts():
     database = Posts.query.all()
     abouts = []
     urls = []
-    for i in range(len(database)):
-        abouts.append(database[i].about)
-        
-        if os.path.isfile(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}"):
-            urls.append(f"/static/Posts/post{database[i].id}.{database[i].extension}")
-        else:
-            urls.append("")
+    total = len(os.listdir(os.path.dirname(__file__)+"/static/Posts/"))
+    for i in range(total-1):
+        x = i + (len(database) - (total-1))
+        abouts.append(database[x].about)
+        urls.append(f"/static/Posts/post{database[x].id}.{database[x].extension}")
 
     return render_template('posts.html', database= (abouts, urls))
 
