@@ -17,7 +17,7 @@
     {%set count = database[0]|length %}
     {% for i in range(count) %}
     <h3>{{i+1}}</h3>{{database[0][i]}}<br>
-        <img src="{{database[1][i]}}" alt="your image" loading="lazy"/><br>
+        <img src="{{database[1][i]}}" alt="post{{i+1}}" loading="lazy"/><br>
     {% endfor %}
 </body>
 

@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 app= Flask(__name__)
 hasher= ph.PasswordHasher()
 
-app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql8601155:DG89evD7Pj@sql8.freemysqlhosting.net/sql8601155"
+app.config['SQLALCHEMY_DATABASE_URI']= "mysql://sql7604785:Y7GAsDCUTM@sql7.freesqldatabase.com/sql7604785"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 
@@ -31,13 +31,11 @@ class Data(db.Model):
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key= True)
     about = db.Column(db.String(500))
-    image = db.Column(db.LargeBinary(length=(2**32)-1))
     extension = db.Column(db.String(5))
 
 
 @app.route('/')
 def home():
-
     db.session.commit()
     database_records= Data.query.all()
     return render_template('home.html', database_records= database_records)
@@ -166,20 +164,16 @@ def upload():
     if request.method=='POST':
         about = request.form['about']
         image = request.files['image']
-        image.save(os.path.dirname(__file__)+f"/static/{image.filename}")
-        with open(f"static/{image.filename}", 'rb') as binary:
-            blob = binary.read()
-        os.remove(f"static/{image.filename}")
 
         ext = re.findall("\.([a-z]*)$", image.filename)[0]
-        data = Posts(about= about, image= blob, extension= ext)
+        data = Posts(about= about, extension= ext)
         db.session.add(data)
         db.session.commit()
 
         database = Posts.query.all()
-        # image.save(os.path.dirname(__file__)+f"/static/post{database[-1].id}.{database[-1].extension}")
-        with open(os.path.dirname(__file__)+f"/static/Posts/post{database[-1].id}.{database[-1].extension}", 'wb') as f:
-            f.write(blob)
+        image.save(os.path.dirname(__file__)+f"/static/Posts/post{database[-1].id}.{database[-1].extension}")
+
+        return redirect('/posts')
     
     return render_template('upload.html')
 
@@ -189,17 +183,9 @@ def posts():
     abouts = []
     urls = []
     for i in range(len(database)):
-        abouts.append(database[i].about)
-        
         if os.path.isfile(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}"):
+            abouts.append(database[i].about)
             urls.append(f"/static/Posts/post{database[i].id}.{database[i].extension}")
-        else:
-            urls.append(base64.b64encode(database[i].image))
-            urls[i] = urls[i].decode('utf-8')
-            urls[i] = f"data:image/{database[i].extension};base64,{urls[i]}"
-            with open(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}", 'wb') as f:
-                f.write(database[i].image)
-        
 
     return render_template('posts.html', database= (abouts, urls))
 
