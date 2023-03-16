@@ -11,13 +11,19 @@
         <h3>What's on your mind?</h3><br>
         <input type="text" name="about"><br><br>
         <h3>Upload a pic</h3><br>
-        <input type="file" name="image" accept="image/png, image/jpg, image/gif"><br><br>
-        <input type="submit" value="Post">
+        <input type="file" name="image" accept="image/*"><br><br>
+        <input type="submit" value="Post"><br><br>
     </form>
+    <div class="message"></div>
     <script>
-        if (window.history.replaceState){
-                window.history.replaceState( null, null, window.location.href );
-            }
+        div = document.getElementsByClassName('message')[0]
+        if ("{{success}}">0){
+            div.innerHTML = "Uploaded successfully !!<br><a href=\"/posts\">Click to see all posts</a>"
+        }
+        else if ("{{success}}"<0){
+            div.innerHTML = "Upload failed: Please upload an image !!"
+        }
     </script>
+    <script src="static/common_script.js"></script>
 </body>
 </html>

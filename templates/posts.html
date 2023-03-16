@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            img {
+                width: 400px;
+            }
+        </style>
+        <title>All Posts</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        img {
-            width: 400px;
-        }
-    </style>
-    <title>Your Posts</title>
-</head>
+    <body>
+        {%set count = database[0]|length %}
+        {% for i in range(count) %}
+        <h3>{{i+1}}</h3><p>{{database[0][i]}}</p><br>
+        <img src="{{database[1][i]}}" alt="post{{i+1}}" loading="lazy" /><br>
+        {% endfor %}
 
-<body>
-    {%set count = database[0]|length %}
-    {% for i in range(count) %}
-    <h3>{{i+1}}</h3>{{database[0][i]}}<br>
-        <img src="{{database[1][i]}}" alt="post{{i+1}}" loading="lazy"/><br>
-    {% endfor %}
-</body>
-
+        <script src="static/common_script.js"></script>
+    </body>
 </html>
-
-
-<!-- Need to add existing images to static folder for fast access -->

@@ -1,25 +1,25 @@
 <html lang="en">
-<head>
-    <title>Cookie Mismatch</title>
-    <link rel="icon" href="static/logo.png">
-    <style>
-        .help {color: rgb(13, 13, 137);}
-        a {text-decoration: underline;}
-        a:hover {cursor: pointer; text-decoration: line-through;}
-    </style>
-</head>
-<body>
-    <h1>Cookie Mismatch</h1>
-    <p>Your cookies can not be matched with our data. It may be due to manual updating of the cookies. Try clearing all cookies and log in again.</p>
-    <div class="help">We can help do that for you:</div><br>
-    <a class= "help" onclick="ask_clear()">Clear all cookies</a>
-    <script>
-        function ask_clear(){
-            if (confirm("Are you sure, you want to delete all cookies on this site. You will loss your logged identity.")) {
-                window.location.replace('/logout')
+    <head>
+        <title>Cookie Mismatch</title>
+        <link rel="icon" href="static/logo.png">
+        <style>
+            .help {color: rgb(13, 13, 137);}
+            a {text-decoration: underline;}
+            a:hover {cursor: pointer; text-decoration: line-through;}
+        </style>
+    </head>
+    <body>
+        <h1>Cookie Mismatch</h1>
+        <p>Your cookies can not be matched with our data. It may be due to manual updating of the cookies. Try clearing all cookies and log in again.</p>
+        <div class="help">We can help do that for you:</div><br>
+        <a class= "help" onclick="ask_clear()">Clear all cookies</a>
+        <script>
+            function ask_clear(){
+                if (confirm("Are you sure, you want to delete all cookies on this site. You will loss your logged identity.")) {
+                    window.location.replace('/logout')
+                }
             }
-        }
-    </script>
-    <script src="static/history_saver.js"></script>
-</body>
+        </script>
+        <script src="static/common_script.js"></script>
+    </body>
 </html>

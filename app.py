@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, make_response, Response
 from flask_sqlalchemy import SQLAlchemy
 import password_hasher as ph
-import re, os, base64
+import re, os, random
 from datetime import datetime, timedelta
 
 app= Flask(__name__)
@@ -32,7 +32,6 @@ class Posts(db.Model):
     id = db.Column(db.Integer, primary_key= True)
     about = db.Column(db.String(500))
     extension = db.Column(db.String(5))
-
 
 @app.route('/')
 def home():
@@ -161,31 +160,44 @@ def logout():
 
 @app.route('/upload', methods= ['GET', 'POST'])
 def upload():
+    success= 0
     if request.method=='POST':
         about = request.form['about']
         image = request.files['image']
 
-        ext = re.findall("\.([a-z]*)$", image.filename)[0]
-        data = Posts(about= about, extension= ext)
-        db.session.add(data)
-        db.session.commit()
+        ext = re.findall("\.([a-z0-9]*)$", image.filename)
+        last_data = len(Posts.query.all())
 
-        database = Posts.query.all()
-        image.save(os.path.dirname(__file__)+f"/static/Posts/post{database[-1].id}.{database[-1].extension}")
+        if len(ext)>0:
+            if ext[0] in "tiff.jfif.bmp.gif.svg.png.webp.svgz.jpg.jpeg.ico.xbm.dib.pjp.apng.tif.pjpeg.avif".split('.'):
+                if last_data:
+                    data = Posts(about= about, extension= ext)
+                else:
+                    data = Posts(id= 1, about= about, extension= ext)
+                db.session.add(data)
+                db.session.commit()
+                database = Posts.query.all()
+                image.save(os.path.dirname(__file__)+f"/static/Posts/post{database[-1].id}.{database[-1].extension}")
+                success = 1
+            else:
+                success = -1
 
-        return redirect('/posts')
-    
-    return render_template('upload.html')
+    return render_template('upload.html', success= success)
 
 @app.route('/posts')
 def posts():
     database = Posts.query.all()
+    random.shuffle(database)
     abouts = []
     urls = []
     for i in range(len(database)):
         if os.path.isfile(os.path.dirname(__file__)+f"/static/Posts/post{database[i].id}.{database[i].extension}"):
             abouts.append(database[i].about)
             urls.append(f"/static/Posts/post{database[i].id}.{database[i].extension}")
+        else:
+            db.session.query(Posts).delete()
+            db.session.commit()
+            break
 
     return render_template('posts.html', database= (abouts, urls))
 
